@@ -1,0 +1,21 @@
+version: '3.1'
+
+services: 
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=lachilena
+      - POSTGRES_USER=josue
+      - POSTGRES_PASSWORD=lachilena
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=adesco@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=lachi
+    ports:
+      - 5050:80
