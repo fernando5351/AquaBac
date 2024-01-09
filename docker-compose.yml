@@ -5,8 +5,8 @@ services:
     image: postgres
     environment:
       - POSTGRES_DB=lachilena
-      - POSTGRES_USER=josue
-      - POSTGRES_PASSWORD=lachilena
+      - POSTGRES_USER=schiffer
+      - POSTGRES_PASSWORD=kira002
     ports:
       - 5432:5432
     volumes:
@@ -16,6 +16,6 @@ services:
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=adesco@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=lachi
+      - PGADMIN_DEFAULT_PASSWORD=lachi2021
     ports:
       - 5050:80
