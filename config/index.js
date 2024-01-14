@@ -12,6 +12,10 @@ const config = {
     }
 }
 
+<<<<<<< HEAD
 console.log("configuracion de la db", config.database);
 
 module.exports = config;
+=======
+module.exports =  config;
+>>>>>>> ef11b29f8f6df41c5bb6f0b830a49cc717e90cd9
