@@ -1,15 +1,17 @@
 const { isProduction, database } = require('../config');
 
-let URI = ""
+let URI = '';
 if (isProduction) {
     URI = database.url;
 } else {
-    const USER = encodeURI(database.user);
-    const PASWORD = encodeURI(database.password);
-    URI = `postgres:${USER}:${PASWORD}/${database.host}:${database.port}/${database.dbName}`;
+    const USER = encodeURIComponent(database.user);
+    const PASSWORD = encodeURIComponent(database.password);
+    URI = `postgres://${USER}:${PASSWORD}@${database.host}:${database.port}/${database.dbName}`;
 }
 
-module.exports={
+console.log('URL de la base de datos:', URI);
+
+module.exports = {
     development: {
         url: URI,
         dialect: 'postgres',
@@ -18,4 +20,4 @@ module.exports={
         url: URI,
         dialect: 'postgres',
     }
-} 
+};
