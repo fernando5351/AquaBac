@@ -21,16 +21,6 @@ const UserModel ={
         allowNull:false,
         unique:false
     },
-    dui:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    direction:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique:false
-    },
     email:{
         type: DataTypes.STRING,
         allowNull:false,

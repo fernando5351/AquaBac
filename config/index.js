@@ -9,13 +9,16 @@ const config = {
         port: process.env.DATABASE_PORT,
         dbName: process.env.DATABASE_NAME,
         url: process.env.DATABASE_URL
+    },
+    Jwt:{
+        secret: process.env.JWT_SECRET,
+        login: process.env.JWT_LOGIN,
+        recovery: process.env.JWT_RECOVERY
+    },
+    Mail:{
+        mail: process.env.MAIL_ADDRESS,
+        password: process.env.MAIL_PASSWORD
     }
 }
 
-<<<<<<< HEAD
-console.log("configuracion de la db", config.database);
-
 module.exports = config;
-=======
-module.exports =  config;
->>>>>>> ef11b29f8f6df41c5bb6f0b830a49cc717e90cd9
