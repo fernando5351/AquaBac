@@ -9,6 +9,12 @@ const config = {
         port: process.env.DATABASE_PORT,
         dbName: process.env.DATABASE_NAME,
         url: process.env.DATABASE_URL
+    },
+    mail: {
+        user: process.env.EMAIL,
+        password: process.env.EMAIL_PASSWORD,
+        service: process.env.MAIL_SERVICE,
+        port: process.env.EMAIL_PORT
     }
 }
 
