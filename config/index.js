@@ -9,15 +9,16 @@ const config = {
         port: process.env.DATABASE_PORT,
         dbName: process.env.DATABASE_NAME,
         url: process.env.DATABASE_URL
-    },
-    Jwt:{
+    }, Jwt:{
         secret: process.env.JWT_SECRET,
         login: process.env.JWT_LOGIN,
         recovery: process.env.JWT_RECOVERY
     },
-    Mail:{
-        mail: process.env.MAIL_ADDRESS,
-        password: process.env.MAIL_PASSWORD
+    mail: {
+        user: process.env.EMAIL,
+        password: process.env.EMAIL_PASSWORD,
+        service: process.env.MAIL_SERVICE,
+        port: process.env.EMAIL_PORT
     }
 }
 
