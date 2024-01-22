@@ -11,7 +11,9 @@ class RoleController {
     }
 
     async getAll(){
-        const role = await models.Role.findAll();
+        const role = await models.Role.findAll({
+            include: ['Users']
+        });
         if (role < 1) {
             throw boom.notFound('Data not found')
         }

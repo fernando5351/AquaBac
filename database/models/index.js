@@ -3,7 +3,7 @@ const { User ,UserModel} = require('../models/UserModel');
 
 function setUpModels(sequelize) {
     Role.init(RoleModel, Role.config(sequelize));
-    User.init(RoleModel, User.config(sequelize));
+    User.init(UserModel, User.config(sequelize));
 
 
 
