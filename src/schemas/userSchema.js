@@ -14,13 +14,13 @@ const status = Joi.string();
     lastname: lastname.required(),
     email: email.required().email(),
     password: password.required(),
-    status: Joi
+    status: status.required()
  });
 
  const searchUser = Joi.object({
    name: name.required()
  });
-
+ 
  const updateUser = Joi.object({
    name,
    lastname,

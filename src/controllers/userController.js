@@ -18,25 +18,24 @@ class UserController  {
         return user
     }
 
-    async getAll(){
+    async getAll() {
         const users = await models.User.findAll({
-            include: 'Role',
-            attributes: {exclude: ['password']}
+            include: [{ model: models.Role, as: 'role' }],
+            attributes: { exclude: ['password'] }
         });
-
-        if (!users) {
-            throw boom.notFound('Users not foun bro')
+    
+        if (users.length === 0) {
+            throw boom.notFound('Users not found bro');
         }
-        return users
+        return users;
     }
-
-
+    
     async getById(id){
         const user = await models.User.findByPk(id,{
             include: ['Role']
         });
         if (!user) {
-            throw boom.notFound(`Role with ${id} not found`)
+            throw boom.notFound(`User with ${id} not found`)
         }
         return user
     }
