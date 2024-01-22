@@ -22,8 +22,8 @@ const RoleModel = {
 
 class Role extends Model {
     static associate(models) {
-        this.hasOne(models.User, {
-            as: 'Users',
+        this.hasMany(models.User, {
+            as: 'User',
             foreignKey: 'idRole',
         });
     }
@@ -31,7 +31,7 @@ class Role extends Model {
     static config(sequelize) {
         return {
             sequelize,
-            modelName: 'Role',
+            modelName: 'role',
             tableName: ROLE_TABLE,
             timestamps: false,
         };

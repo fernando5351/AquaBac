@@ -1,11 +1,8 @@
 const {Model, DataTypes,Sequelize} = require('sequelize');
 const {ROLE_TABLE} = require('./RoleModel');
-const { extend } = require('joi');
-
-
 const USER_TABLE ='users';
 
-const UserModel ={
+const UserModel = {
     id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -21,16 +18,6 @@ const UserModel ={
         allowNull:false,
         unique:false
     },
-    dui:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    direction:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique:false
-    },
     email:{
         type: DataTypes.STRING,
         allowNull:false,
@@ -43,7 +30,7 @@ const UserModel ={
     },
     status:{
         type:DataTypes.STRING,
-        defaultvalue:true,
+        defaultvalue:'true',
         allowNull:false,
     },
     idRole:{
@@ -67,11 +54,10 @@ const UserModel ={
 class User extends Model{
     static associate(models){
         this.belongsTo(models.Role,{
-            as:'Role',
+            as:'role',
             foreignKey:'idRole'
         });
-    };
-
+    }; 
 
     static config(sequelize){
         return{

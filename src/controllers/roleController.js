@@ -16,7 +16,7 @@ class RoleController {
             throw boom.notFound('Data not found')
         }
         return role
-    }
+    };
 
     async getById(id){
         const role = await models.Role.findByPk(id);
@@ -24,7 +24,7 @@ class RoleController {
             throw boom.notFound(`Role with ${id} not found`)
         }
         return role
-    }
+    };
 
 
     async searchByName(name){
@@ -37,18 +37,18 @@ class RoleController {
             throw boom.notFound(`Role not found`)
         }
         return role
-    }
+    };
 
     async updateRole(id,data){
         const role = await this.getById(id)
         const roleUpdate = await role.update(data)
         return roleUpdate
-    }
+    };
 
     async deleteRole(id){
         const role =  await this.getById(id)
         await role.destroy();
-    }
+    };
 
 };
 

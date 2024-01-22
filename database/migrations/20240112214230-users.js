@@ -12,8 +12,6 @@ module.exports = {
       lastname: 'Diaz',
       email: 'josuejonathandiaz309@gmail.com',
       password: '!suQKUN%y*Gw?wsVvJxmYpH$D2PvDe',
-      dui: '067406194',
-      direction: 'Colonia Guadalupe San julian',
       status: true,
       id_role: 1,
       createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
