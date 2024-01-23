@@ -22,4 +22,9 @@ const config = {
     }
 }
 
+<<<<<<< HEAD
+=======
+console.log("configuracion de la db", config.database);
+
+>>>>>>> origin/develop
 module.exports = config;

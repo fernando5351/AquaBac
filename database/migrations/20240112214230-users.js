@@ -15,7 +15,19 @@ module.exports = {
       status: true,
       id_role: 1,
       createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
-    }]);
+    },
+    {
+      name: 'Isaac Fernando',
+      lastname: 'Fernandez',
+      email: 'isaacfernandofernandez5351@gmail.com',
+      password: '$2b$10$vNQpnaG3upZY9ABR.K0KtO9xLB3JlYMX2HDD05mJpjNMlOa6cObom',
+      dui: '00000000-0',
+      direction: 'San julian',
+      status: true,
+      id_role: 1,
+      createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+    }
+  ]);
 
   },
 

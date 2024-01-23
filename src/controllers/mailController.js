@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 class Mailer {
   constructor() {}
 
-  sendMail(mail, message, html) {
+  sendMail(email, subject, html) {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -15,18 +15,21 @@ class Mailer {
         rejectUnauthorized: false,
       },
     });
+    let mailOptions = {
+      from: mail.user,
+      to: email,
+      subject,
+      html: html,
+    };
     return new Promise((resolve, reject) => {
-      let info = transporter.sendMail({
-          from: `${mail.user}`,
-          to: `${message.to}`,
-          subject: message,
-          html: html,
-        },
-        (err, info2) => {
-          if (err) return reject(err);
-          resolve(info2);
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          reject(Error("Email not sent"));
+        } else {
+          resolve(info.envelope);
         }
-      );
+      });
     });
   }
 }

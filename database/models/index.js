@@ -5,6 +5,8 @@ function setUpModels(sequelize) {
     Role.init(RoleModel, Role.config(sequelize));
     User.init(UserModel, User.config(sequelize));
 
+
+
     // Asociaciones
     Role.associate(sequelize.models);
     User.associate(sequelize.models);
