@@ -31,7 +31,7 @@ class Role extends Model {
     static config(sequelize) {
         return {
             sequelize,
-            modelName: 'role',
+            modelName: 'Role',
             tableName: ROLE_TABLE,
             timestamps: false,
         };
