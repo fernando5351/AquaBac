@@ -18,6 +18,15 @@ const MonthlyFeesModel = {
 
 class MonthlyFees extends Model {
     static associate(models) {}
+
+    static config(sequelize) {
+        return {
+            sequelize,
+            tableName: MONTHLYFEES_TABLE,
+            modelName: 'MonthlyFees',
+            timestamps: true,
+        }
+    }
 }
 
 module.exports = {

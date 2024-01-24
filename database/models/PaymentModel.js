@@ -56,6 +56,15 @@ const PaymentModel = {
 
 class Payment extends Model {
     static associate(models) {}
+
+    static config(sequelize) {
+        return {
+            sequelize,
+            tableName: PAYMENT_TABLE,
+            modelName: 'Payment',
+            timestamps: true,
+        }
+    }
 }
 
 module.exports = {
