@@ -11,7 +11,7 @@ app.set('port', port);
 app.use(bodyParser.json());
 
 //cors configuration
-var whitelist = ['http://localhost:3000', 'http://localhost:4200', ];
+var whitelist = ['http://localhost:3000', 'http://localhost:4200' ];
 const corsOptionsDelegate = {
     origin: whitelist,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -21,13 +21,15 @@ const corsOptionsDelegate = {
   // routing
 routerHandler(app);
 
-
-
 app.get('/',(req,res)=>{
     res.status(200).json({
         statusCode: 200,
         message: "We have Water:)",
-        data: ['Water']
+        data: [{
+            status: 200,
+            message: 'we have up',
+            data: 'Water'
+        }]
     })
 })
 
