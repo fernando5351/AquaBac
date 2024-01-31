@@ -1,6 +1,6 @@
 const { Model, Sequelize, DataTypes } = require('sequelize');
 
-const MONTHLYFEES_TABLE = 'payment';
+const MONTHLYFEES_TABLE = 'monthly_fees';
 
 const MonthlyFeesModel = {
     id: {
@@ -9,22 +9,37 @@ const MonthlyFeesModel = {
         allowNull: false,
         autoIncrement: true
     },
+    from: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        unique: true
+    },
+    untill: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        unique: true
+    },
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,
-        defaultvalue: Sequelize.NOW
+        defaultValue: Sequelize.NOW
     }
 };
 
 class MonthlyFees extends Model {
-    static associate(models) {}
+    static associate(models) {
+        this.hasMany(models.Payment ,{
+            foreignKey: 'monthlyFeesId',
+            as: 'paymentMonthlyFee'
+        });
+    }
 
     static config(sequelize) {
         return {
             sequelize,
             tableName: MONTHLYFEES_TABLE,
             modelName: 'MonthlyFees',
-            timestamps: true,
+            timestamps: false
         }
     }
 }

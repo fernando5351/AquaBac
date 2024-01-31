@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require esm test/**/*.mjs",
-    "test-co": "mocha --recursive",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "migration-generate": "sequelize-cli migration:generate --name",

@@ -1,5 +1,4 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const { ADRESS_TABLE } = require('./AddressModel');
 
 const CLIENT_TABLE = 'client';
 
@@ -16,6 +15,7 @@ const ClientModel = {
     email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: true
     },
     password: {
         type: DataTypes.STRING,
@@ -34,33 +34,31 @@ const ClientModel = {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    direction: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-            model: ADRESS_TABLE,
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-    },
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,
-        defaultvalue: Sequelize.NOW
+        defaultValue: Sequelize.NOW
     }
 }
 
 class Client extends Model {
-    static associate(models) {}
+    static associate(models) {
+        this.hasMany(models.Adress, {
+            as: 'Adress',
+            foreignKey: 'idClient'
+        });
+        this.hasMany(models.Payment, {
+            foreignKey: 'clientId',
+            as:  'Payment'
+        })
+    }
 
     static config(sequelize) {
         return {
             sequelize,
-            modelName: 'ClientsModel',
+            modelName: 'Client',
             tableName: CLIENT_TABLE,
-            timestamps: true
+            timestamps: false
         }
     }
 }
