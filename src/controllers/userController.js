@@ -20,7 +20,7 @@ class UserController  {
 
     async getAll() {
         const users = await models.User.findAll({
-            include: [{ model: models.Role, as: 'role' }],
+            include: [{ model: models.Role, as: 'Role' }],
             attributes: { exclude: ['password'] }
         });
     

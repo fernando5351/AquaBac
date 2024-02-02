@@ -5,4 +5,4 @@ const localStrategy = require('./strategies/local.strategy');
 passport.use(localStrategy);
 passport.use('jwtLogin', loginJwt);
 passport.use('jwtRecovery', recoveryJwt);
-passport.use(jsonwebtoken);
+passport.use('jwt',jsonwebtoken);

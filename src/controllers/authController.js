@@ -31,7 +31,7 @@ class authController {
         const payload ={
             sub: user.id,
             code: user.status,
-            role: user.role ? user.role : null
+            role: user.Role ? user.Role.name : null,
         };
         const token = await jwt.sign(payload, Jwt.secret, {expiresIn: '72h'});
         return token

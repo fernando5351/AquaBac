@@ -7,13 +7,16 @@ const lastname = Joi.string();
 const email = Joi.string();
 const password = Joi.string();
 const status = Joi.string();
+const createdAt = Joi.string()
 
 
  const createUser = Joi.object({
     name: name.required(),
+    idRole: idRole.required(),
     lastname: lastname.required(),
     email: email.required().email(),
     password: password.required(),
+    createdAt: createdAt,
     status: status.required()
  });
 
