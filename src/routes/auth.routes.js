@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 const configuration = require('../../config/index');
 const UserController = require('../controllers/userController')
 const {login,recovery,recoveryPassword} = require('../schemas/authSchema')
-const bodyHtml = fs.readFileSync(path.join(__dirname, '../mail/recovery.html'), 'utf-8');
+
 const fs = require('fs')
 const passport = require('passport');
 const { error } = require('console');
@@ -13,7 +13,7 @@ const { error } = require('console');
 const authServices = new authController;
 const userServices = new UserController;
 
-router.post('/login',
+router.post('/login', 
     validatorHandler(login,'body'),
     passport.authenticate('local',{session:false}),
     async(req,res,next)=>{
@@ -76,3 +76,6 @@ router.post('/recovery-password',
         })
     }
 )
+
+
+module.exports = router

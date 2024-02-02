@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom')
-const {Strategy} = require('passport-jwt');
+const {Strategy} = require('passport-local');
 const  authController = require('../../controllers/authController');
 const bcrypt = require('bcrypt')
 
