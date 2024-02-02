@@ -9,45 +9,43 @@ class ClientController {
     }
 
     async getAll(paymentStatus) {
-        const whereOptions = {};
+        const includeOptions = [
+            {
+                model: models.Adress,
+                as: 'Adress',
+            },
+            {
+                model: models.Payment,
+                as: 'Payment'
+            }
+        ];
 
         if (paymentStatus) {
-            whereOptions.status = paymentStatus;
+            includeOptions[1].where = { status: paymentStatus };
         }
-        console.log(whereOptions);
         return await models.Client.findAll({
-            include: [
-                {
-                    model: models.Adress,
-                    as: 'Adress',
-                },
-                {
-                    model: models.Payment,
-                    as: 'Payment',
-                    where: (Object.keys(whereOptions).length !== 0) ? whereOptions : undefined
-                }
-            ]
+            include: includeOptions
         });
     }
 
     async getById(id, paymentStatus) {
-        const whereOptions = {};
+        const includeOptions = [
+            {
+                model: models.Adress,
+                as: 'Adress',
+            },
+            {
+                model: models.Payment,
+                as: 'Payment'
+            }
+        ];
 
         if (paymentStatus) {
-            whereOptions.status = paymentStatus;
+            includeOptions[1].where = { status: paymentStatus };
         }
+        
         let client = await models.Client.findByPk(id, {
-            include: [
-                {
-                    model: models.Adress,
-                    as: 'Adress',
-                },
-                {
-                    model:  models.Payment,
-                    as: 'Payment',
-                    where: whereOptions
-                }
-            ]
+            include: includeOptions
         });
         if (!client) throw boom.notFound("Client not found");
         return client;

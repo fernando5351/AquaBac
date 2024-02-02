@@ -10,8 +10,7 @@ const paymentController = new PaymentController();
 const amountController = new AmountController();
 class MonthlyFeesController {
     async create(data) {
-        try {
-            const { from, untill } = data;
+        const { from, untill } = data;
 
         const minDuration = 29 * 24 * 60 * 60 * 1000;
         if (new Date(untill) - new Date(from) < minDuration) {
@@ -23,41 +22,35 @@ class MonthlyFeesController {
         for (let i=0; i< clients.length; i++) {
             let clientId = clients[i].id;
             let amountId = clients[i].amountId;
+            const adress = clients[i].Adress;
             const amount =  await amountController.getById(amountId);
             //asignar mora
             for (let i = 0; i < clients[i].Payment.length; i++) {
                 const payment = clients[i].Payment[i];
-                
+                console.log('estoy dentro de payment');
                 if (payment.status === "pending") {
-                    await clientController.updateClient(clientId, {'status':'mora'});
+                    const update = await clientController.updateClient(clientId, {'status':'mora'});
+                    console.log(update);
                 };
             }
             // Asignar el pago a todos los clientes
             const monthName = new Date().toLocaleString('default', { month: 'long' });
             const year = new Date().getFullYear();
 
-            for (let i = 0; i < clients[i].Adress.length; i++) {
-                const adress = clients[i].Adress[i];
-                console.log(adress);
-                console.log(adress.id + ' => id de direcion del usuario => ' + clientId);
-
-                const payment = await paymentController.create({
+            for (let i = 0; i < adress.length; i++) {
+                const element = adress[i];
+                await paymentController.create({
                     "clientId": clientId,
                     "month": monthName,
-                    "adressId": adress.id,
+                    "adressId": element.id,
                     "year": year,
                     "amount": amount.dataValues.amount,
                     "monthlyFeesId": monthlyFee.dataValues.id,
                     "status": "pending"
                 });
-                console.log(payment);
-            };
+            }
         }
-        return monthlyFee;
-        } catch (error) {
-            console.log(error);
-        }
-        
+        return monthlyFee;        
     }
 
     async getAll() {
