@@ -11,7 +11,6 @@ if (isProduction) {
     const USER = encodeURIComponent(database.user);
     URI = `postgres://${USER}:${PASSWORD}@${database.host}:${database.port}/${database.dbName}`;
 }
-console.log(URI);
 
 const sequelize = new Sequelize(URI, {
     dialect: 'postgres',

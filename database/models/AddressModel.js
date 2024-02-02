@@ -1,4 +1,5 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
+const { CLIENT_TABLE } = require('./ClientsModel');
 
 const ADRESS_TABLE = 'adress';
 
@@ -8,14 +9,14 @@ const AdressModel = {
         primaryKey: true,
         autoIncrement: true
     },
-    userId: {
+    idClient: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'user',
+        references:{
+            model: CLIENT_TABLE,
             key: 'id'
         },
-        onDelete: 'CASCADE',
+        onDelete: 'RESTRICT',
         onUpdate: 'CASCADE'
     },
     streetName: {
@@ -24,7 +25,7 @@ const AdressModel = {
     },
     houseNumber: {
         type: DataTypes.STRING(),
-        allowNull: false
+        allowNull: false,
     },
     polygonNumber: {
         type: DataTypes.STRING(),
@@ -37,14 +38,19 @@ const AdressModel = {
 }
 
 class Adress extends Model {
-    static associate(models) {}
+    static associate(models) {
+        this.belongsTo(models.Client, {
+            as: 'Client',
+            foreignKey: 'idClient'
+        })
+    }
 
     static config(sequelize){
         return {
             sequelize,
-            modelName: 'AdressModel',
+            modelName: 'Adress',
             tableName: ADRESS_TABLE,
-            timestamps: true
+            timestamps: false
         }
     }
 }

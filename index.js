@@ -7,4 +7,4 @@ app.listen(app.get('port'),(err)=>{
     } catch (error) {
         console.log(err) 
     }
-})
+});
