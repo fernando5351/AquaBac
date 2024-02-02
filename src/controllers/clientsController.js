@@ -8,20 +8,47 @@ class ClientController {
         return clients;
     }
 
-    async getAll() {
+    async getAll(paymentStatus) {
+        const whereOptions = {};
+
+        if (paymentStatus) {
+            whereOptions.status = paymentStatus;
+        }
+        console.log(whereOptions);
         return await models.Client.findAll({
-            include: ['Adress', 'Payment']
+            include: [
+                {
+                    model: models.Adress,
+                    as: 'Adress',
+                },
+                {
+                    model: models.Payment,
+                    as: 'Payment',
+                    where: (Object.keys(whereOptions).length !== 0) ? whereOptions : undefined
+                }
+            ]
         });
     }
 
-    async getAllW() {
-        return await models.Client.findAll({
-            include: ['Adress']
-        });
-    }
+    async getById(id, paymentStatus) {
+        const whereOptions = {};
 
-    async getById(id) {
-        let client = await models.Client.findByPk(id);
+        if (paymentStatus) {
+            whereOptions.status = paymentStatus;
+        }
+        let client = await models.Client.findByPk(id, {
+            include: [
+                {
+                    model: models.Adress,
+                    as: 'Adress',
+                },
+                {
+                    model:  models.Payment,
+                    as: 'Payment',
+                    where: whereOptions
+                }
+            ]
+        });
         if (!client) throw boom.notFound("Client not found");
         return client;
     }
@@ -39,6 +66,7 @@ class ClientController {
     }
 
     async updateClient(id, data) {
+        console.log(id + ' es y data: ' + data);
         const client = await this.getById(id);
         return await client.update(data);
     }

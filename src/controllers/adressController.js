@@ -6,9 +6,8 @@ const {Op} = require('sequelize');
 class AdressController  {
 
     async create(data){
-        console.log(models);
         const direction = await models.Adress.create(data);
-        return direction;
+        return direction;        
     }
 
     async getAll() {

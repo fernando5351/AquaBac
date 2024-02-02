@@ -23,8 +23,8 @@ const AmountModel = {
 
 class Amount extends Model {
     static associate(models) {
-        this.hasMany(models.Payment, {
-            foreignKey: 'amount',
+        this.hasMany(models.Client, {
+            foreignKey: 'amountId',
             as: 'Payments'
         })
     }

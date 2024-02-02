@@ -1,4 +1,5 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
+const { Amount_TABLE } = require('./amountModel');
 
 const CLIENT_TABLE = 'client';
 
@@ -34,10 +35,24 @@ const ClientModel = {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    amountId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Amount_TABLE,
+            key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+    },
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,
         defaultValue: Sequelize.NOW
+    },
+    candledIn: {
+        type: DataTypes.DATE,
+        allowNull:true,
+        field: 'candled_in'
     }
 }
 
@@ -50,7 +65,11 @@ class Client extends Model {
         this.hasMany(models.Payment, {
             foreignKey: 'clientId',
             as:  'Payment'
-        })
+        });
+        this.belongsTo(models.Amount, {
+            foreignKey: 'amountId',
+            as: 'amountPayment',
+        });
     }
 
     static config(sequelize) {

@@ -19,6 +19,13 @@ const MonthlyFeesModel = {
         allowNull: false,
         unique: true
     },
+    status: {
+        type: DataTypes.STRING,
+        validate: {
+            isIn: [['active', 'inactive']],
+        },
+        defaultValue: 'Active'
+    },
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,

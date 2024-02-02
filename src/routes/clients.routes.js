@@ -25,7 +25,8 @@ router.get('/',
     validatorHandler(showPaymentsClients, 'query'),
     async (req, res, next) => {
         try {
-            const clients = await service.getAll();
+            const { paymentStatus } = req.query;
+            const clients = await service.getAll(paymentStatus);
             res.status(200).json({
                 statusCode: 200,
                 message: 'Get all Clients successfully',
@@ -39,10 +40,12 @@ router.get('/',
 
 router.get('/:id',
     validatorHandler(getClient, 'params'),
+    validatorHandler(showPaymentsClients, 'query'),
     async (req, res, next) => {
         try {
+            const { paymentStatus } = req.query;
             const { id } = req.params;
-            const client = await service.getById(id);
+            const client = await service.getById(id, paymentStatus);
             res.status(200).json({
                 statusCode: 200,
                 message: 'Get Client by id successfully',

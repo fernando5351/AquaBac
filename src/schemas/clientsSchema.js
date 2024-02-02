@@ -8,6 +8,7 @@ const dui = Joi.string();
 const cellphone = Joi.number();
 const otherCellphone = Joi.number();
 const direction = Joi.number().integer();
+const amountId = Joi.number().integer();
 const paymentStatus = Joi.string().valid('paid', 'pending', 'mora');
 
 const createClient = Joi.object({
@@ -16,7 +17,8 @@ const createClient = Joi.object({
     password: password,
     dui: dui.required(),
     cellphone: cellphone,
-    otherCellphone: otherCellphone
+    otherCellphone: otherCellphone,
+    amountId: amountId.required()
 });
 
 const updateClient = Joi.object({
@@ -25,7 +27,8 @@ const updateClient = Joi.object({
     password: password,
     dui: dui,
     cellphone: cellphone,
-    otherCellphone: otherCellphone
+    otherCellphone: otherCellphone,
+    amountId
 });
 
 const getClient = Joi.object({
@@ -33,7 +36,7 @@ const getClient = Joi.object({
 });
 
 const  showPaymentsClients = Joi.object({
-    paymentStatus: paymentStatus.required()
+    paymentStatus
 })
 
 const searchClient = Joi.object({

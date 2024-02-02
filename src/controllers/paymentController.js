@@ -3,25 +3,14 @@ const boom = require('@hapi/boom');
 
 class PaymentController {
     async create(data) {
+        console.log(data);
         const payment = await models.Payment.create(data);
         return payment;
     }
 
-    async getAll(paymentStatus) {
+    async getAll() {
         const payments = await models.Payment.findAll({
-            include: [
-                {
-                    model: models.Adress,
-                    as: 'Adress',
-                },
-                {
-                    model: models.Payment,
-                    as: 'Payment',
-                    where: {
-                        status: paymentStatus,
-                    },
-                },
-            ],
+            include: ['paymentMonthlyFee', 'Clients']
         });
         return payments;
     }
