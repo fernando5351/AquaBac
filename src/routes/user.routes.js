@@ -11,8 +11,8 @@ const authService = new authController;
 const userService = new UserController;
 
 router.get('/', 
-    passport.authenticate('jwt',{session:false}), 
-    authorizeRoles('Gerente'),   
+     passport.authenticate('jwt',{session:false}), 
+     authorizeRoles('Gerente'),   
     async(req,res,next)=>{
         try {
             const user = await userService.getAll();

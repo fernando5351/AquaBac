@@ -53,8 +53,8 @@ router.get('/:id',
     }
 )
 
-router.get('/search/name',
-    validatorHandler(search),
+router.get('/search/:name',
+   
     async(req,res,next) => {
        try {
         const {name} = req.params;
@@ -94,8 +94,8 @@ router.delete('/:id',
         try {
             const { id } = req.params;
             await service.deleteRole(id)
-            res.status(202).json({
-                statusCode: 202,
+            res.status(200).json({
+                statusCode: 200,
                 message: 'role deleted succesfully',
                 data: parseInt(id)
             })

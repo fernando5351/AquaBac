@@ -41,10 +41,10 @@ class UserController  {
     }
 
     async searchByName(name){
-        const user = await models.User.findAll(name,{
+        const user = await models.User.findAll({
             where:{
                 name:{
-                    [Op.like]: `%${name}%`
+                    [Op.iLike]: `%${name}%`
                 }
             }
         });
