@@ -41,7 +41,7 @@ const PaymentModel = {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    amount: {
+    amountPayable: {
         type: DataTypes.DOUBLE,
         allowNull: false
     },
@@ -66,6 +66,11 @@ const PaymentModel = {
         type: DataTypes.DATE,
         allowNull:false,
         defaultValue: Sequelize.NOW
+    },
+    candledIn: {
+        type: DataTypes.DATE,
+        allowNull:true,
+        field: 'candled_in'
     }
 };
 

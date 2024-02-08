@@ -48,11 +48,6 @@ const ClientModel = {
         type: DataTypes.DATE,
         allowNull:false,
         defaultValue: Sequelize.NOW
-    },
-    candledIn: {
-        type: DataTypes.DATE,
-        allowNull:true,
-        field: 'candled_in'
     }
 }
 

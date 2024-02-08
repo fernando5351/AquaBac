@@ -57,11 +57,11 @@ router.get('/search/amount',
     validatorHandler(searchAmount, 'params'),
     async (req, res, next) => {
         try {
-            const { amount } = req.params;
-            const amounts = await service.searchByAmount(amount);
+            const { name } = req.params;
+            const amounts = await service.searchAmount(name);
             res.status(200).json({
                 statusCode: 200,
-                message: `Amount with value ${amount} found`,
+                message: `Amount with name ${name} found`,
                 data: amounts
             });
         } catch (error) {

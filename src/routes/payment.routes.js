@@ -27,6 +27,23 @@ router.post(
     }
 );
 
+router.patch('/pay/:id', 
+    validatorHandler(getPayment, 'params'),
+    validatorHandler(updatePayment, 'body'),
+    async (req, res, next) => {
+        try {
+            const payment = await paymentService.Pay(req.params.id, req.body);
+            res.status(200).json({
+                statusCode: 200,
+                message: 'payment made satisfactorily',
+                data: payment,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+)
+
 router.get('/', async (req, res, next) => {
     try {
         const payments = await paymentService.getAll();
@@ -78,7 +95,7 @@ router.patch(
     validatorHandler(updatePayment, 'body'),
     async (req, res, next) => {
         try {
-            const payment = await paymentService.updatePayment(req.params.id, req.body);
+            const payment = await paymentService.updadtePayment(req.params.id, req.body);
             res.status(200).json({
                 statusCode: 200,
                 message: 'Update payment successfully',

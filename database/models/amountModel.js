@@ -9,6 +9,11 @@ const AmountModel = {
         allowNull: false,
         autoIncrement: true
     },
+    name: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
     amount: {
         type: DataTypes.DOUBLE,
         allowNull: false,

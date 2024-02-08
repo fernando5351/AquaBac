@@ -65,8 +65,10 @@ class ClientController {
 
     async updateClient(id, data) {
         console.log(id + ' es y data: ' + data);
+        console.log(data);
         const client = await this.getById(id);
-        return await client.update(data);
+        const clientUpdated = await client.update(data);
+        return clientUpdated;
     }
 
     async deleteClient(id) {
