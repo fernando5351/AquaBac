@@ -9,6 +9,11 @@ const AmountModel = {
         allowNull: false,
         autoIncrement: true
     },
+    name: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
     amount: {
         type: DataTypes.DOUBLE,
         allowNull: false,
@@ -23,8 +28,8 @@ const AmountModel = {
 
 class Amount extends Model {
     static associate(models) {
-        this.hasMany(models.Payment, {
-            foreignKey: 'amount',
+        this.hasMany(models.Client, {
+            foreignKey: 'amountId',
             as: 'Payments'
         })
     }

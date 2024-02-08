@@ -42,6 +42,10 @@ class Adress extends Model {
         this.belongsTo(models.Client, {
             as: 'Client',
             foreignKey: 'idClient'
+        });
+        this.hasMany(models.Payment, {
+            foreignKey: 'adressId',
+            as: 'Payment'
         })
     }
 
