@@ -45,10 +45,11 @@ passport.use(localStrategy)
 
 //middlewares
 
+app.use(authorizeRoles);
 app.use(logErrors);
 app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
-app.use(authorizeRoles);
+
 
 module.exports = app;

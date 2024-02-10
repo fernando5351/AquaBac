@@ -102,6 +102,8 @@ router.patch('/:id',
 
 
 router.delete('/:id',
+        passport.authenticate('jwt',{session:false}), 
+        authorizeRoles('Gerente'), 
         validatorHandler(getUser,'id'),
         async (req,res,next)=> {
             try {

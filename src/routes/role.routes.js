@@ -2,6 +2,8 @@ const router = require('express').Router();
 const {validatorHandler} = require('../../middlewares/validatorHandler')
 const {createRole,updateRole,getRole, search} = require('../schemas/roleSchema')
 const {RoleController} = require('../controllers/roleController');
+const passport = require('passport');
+const { authorizeRoles } = require('../../middlewares/authorizeRoles');
 
 const service = new RoleController;
 
@@ -22,6 +24,8 @@ router.post('/',
 )
 
 router.get('/',
+    passport.authenticate('jwt',{session:false}), 
+    authorizeRoles('Gerente'),   
     async(req,res,next) => {
         try {
             const roles = await service.getAll();
@@ -71,6 +75,7 @@ router.get('/search/:name',
 )
 
 router.patch('/:id',
+    
     validatorHandler(getRole, 'params'),
     validatorHandler(updateRole, 'body'),
     async (req,res,next)=>{
@@ -89,6 +94,8 @@ router.patch('/:id',
 
 
 router.delete('/:id',
+    passport.authenticate('jwt',{session:false}),
+    authorizeRoles('Gerente'),
     validatorHandler(getRole,'params'),
     async(req,res,next) => {
         try {

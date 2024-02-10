@@ -14,6 +14,7 @@ const getAmount = Joi.object({
 });
 
 const updateAmount = Joi.object({
+    name: name,
     amount: amount
 });
 

@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const { validatorHandler } = require('../../middlewares/validatorHandler');
+const {authorizeRoles} = require('../../middlewares/authorizeRoles')
 const { createAmount, updateAmount, getAmount, searchAmount } = require('../schemas/amountSchema');
 const AmountController = require('../controllers/amountController');
+const passport = require('passport')
 
 const service = new AmountController();
 
@@ -71,6 +73,8 @@ router.get('/search/amount',
 );
 
 router.patch('/:id',
+    passport.authenticate('jwt',{session:false}),
+    authorizeRoles('Gerente'),
     validatorHandler(getAmount, 'params'),
     validatorHandler(updateAmount, 'body'),
     async (req, res, next) => {
@@ -88,6 +92,8 @@ router.patch('/:id',
 );
 
 router.delete('/:id',
+    passport.authenticate('jwt',{session:false}),
+    authorizeRoles('Gerente'),
     validatorHandler(getAmount, 'params'),
     async (req, res, next) => {
         try {
