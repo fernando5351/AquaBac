@@ -13,7 +13,7 @@ const paymentPendingStatus = 'pending';
 const paymentCanceledStatus = 'paid';
 const PaymentLate = 'mora';
 const monthlyFeeStatusInactive = 'inactive';
-const monthlyFeeStatusActive = 'inactive';
+const monthlyFeeStatusActive = 'active';
 
 class MonthlyFeesController {
     async create(data) {
@@ -52,6 +52,7 @@ class MonthlyFeesController {
                     "month": monthName,
                     "adressId": element.id,
                     "year": year,
+                    "totalAmount": 0,
                     "amountPayable": amount.dataValues.amount,
                     "monthlyFeesId": monthlyFee.dataValues.id,
                     "status": "pending"
@@ -107,7 +108,8 @@ class MonthlyFeesController {
         for (let i = 0; i < payment.length; i++) {
             const getPayment = payment[i];
             if (getPayment.status === paymentPendingStatus) {
-                await paymentController.updadtePayment(getPayment.id, {status: PaymentLate});
+                const mora = await amountController.searchAmount('mora');
+                await paymentController.updadtePayment(getPayment.id, {status: PaymentLate, latePaymentAmount: mora.dataValues.amount});
             }
         }
         return await this.getById(id);
