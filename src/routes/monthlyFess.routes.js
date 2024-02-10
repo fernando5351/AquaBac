@@ -21,7 +21,7 @@ router.post('/',
     }
 );
 
-router.get('/close/:id', 
+router.get('/close-month/:id', 
     validatorHandler(getMonthlyFee, 'params'),
     async (req, res, next) => {
         try {

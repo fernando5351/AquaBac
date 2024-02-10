@@ -7,6 +7,7 @@ const year = Joi.number().integer();
 const amount = Joi.number();
 const status = Joi.string().valid('paid', 'pending', 'mora');
 const monthlyFeesId = Joi.number().integer();
+const totalAmount = Joi.number();
 
 const createPayment = Joi.object({
     clientId: clientId.required(),
@@ -23,7 +24,8 @@ const updatePayment = Joi.object({
     year,
     amount,
     status,
-    monthlyFeesId
+    monthlyFeesId,
+    totalAmount: totalAmount.required()
 });
 
 const searchPayment = Joi.object({
