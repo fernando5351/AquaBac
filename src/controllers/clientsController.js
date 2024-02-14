@@ -16,7 +16,13 @@ class ClientController {
             },
             {
                 model: models.Payment,
-                as: 'Payment'
+                as: 'Payment',
+                include: [
+                    {
+                        model: models.Adress,
+                        as: 'Adress'
+                    }
+                ]
             }
         ];
 
@@ -36,7 +42,13 @@ class ClientController {
             },
             {
                 model: models.Payment,
-                as: 'Payment'
+                as: 'Payment',
+                include: [
+                    {
+                        model: models.Adress,
+                        as: 'Adress'
+                    }
+                ]
             }
         ];
 
