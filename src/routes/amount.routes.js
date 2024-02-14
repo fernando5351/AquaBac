@@ -99,8 +99,8 @@ router.delete('/:id',
         try {
             const { id } = req.params;
             await service.deleteAmount(id);
-            res.status(202).json({
-                statusCode: 202,
+            res.status(200).json({
+                statusCode: 200,
                 message: 'Amount deleted successfully',
                 data: parseInt(id)
             });
