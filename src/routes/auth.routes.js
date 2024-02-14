@@ -4,11 +4,12 @@ const {validatorHandler} = require('../../middlewares/validatorHandler')
 const authController = require('../controllers/authController');
 const configuration = require('../../config/index');
 const UserController = require('../controllers/userController')
-const {login,recovery,recoveryPassword} = require('../schemas/authSchema')
-
+const {login,recovery,recoveryPassword} = require('../schemas/authSchema');
 const fs = require('fs')
+const path = require('path');
+const bodyHtml = fs.readFileSync(path.join(__dirname, '../mail/recovery.html'), 'utf-8');
 const passport = require('passport');
-const { error } = require('console');
+const { error, log } = require('console');
 
 const authServices = new authController;
 const userServices = new UserController;
@@ -43,6 +44,7 @@ router.post('/recovery',
                 throw boom.unauthorized('error')
             }
             var token = await authServices.recovery(user.dataValues);
+            console.log(token);
             var urlProd = ''
             var urlLocal = 'http://localhost:3000';
             var html ='';
@@ -51,9 +53,11 @@ router.post('/recovery',
             }else{
                 html = bodyHtml.replace('{{url}}',urlLocal);
             }
-            const mail = mail.replace('{{token}}', token)
-            await authServices.sendMail(user.dataValues,'Account recovery', null);
+            const mail = html.replace('{{token}}', token)
+            await authServices.sendMail(user.dataValues,'Account recovery', mail);
+            console.log(mail);
             res.status(200).send('operation successfully')
+            
         } catch (error) {
             next(error)
         }

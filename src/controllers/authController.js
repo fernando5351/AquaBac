@@ -2,7 +2,7 @@ const {models} = require('../../sequelize/sequelizeConnection');
 const nodemailer = require('nodemailer');
 const boom = require('@hapi/boom');
 const jwt = require('jsonwebtoken');
-const {Jwt,Mail} = require('../../config/index');
+const {Jwt,mail} = require('../../config/index');
 const bcrypt = require('bcrypt');
 
 
@@ -66,13 +66,13 @@ class authController {
             secure: true,
             port: 465,
             auth:{
-                user: Mail.mail,
-                pass: Mail.password
+                user: mail.user,
+                pass: mail.password
             }
         });
 
         const mailOption = {
-            from: Mail.mail,
+            from: mail.user,
             to: user.email,
             subject,
             html: body
