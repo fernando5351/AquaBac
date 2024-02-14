@@ -23,7 +23,8 @@ class authController {
             throw boom.unauthorized("No se encontro el usuario")
         }
         const password = await bcrypt.hash(data.password,10);
-        const userUpdate = await user.update({password,status:true})
+        const userUpdate = await user.update({password})
+        console.log(userUpdate);
         return userUpdate
     }
 

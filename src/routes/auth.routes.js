@@ -46,7 +46,7 @@ router.post('/recovery',
             var token = await authServices.recovery(user.dataValues);
             console.log(token);
             var urlProd = ''
-            var urlLocal = 'http://localhost:3000';
+            var urlLocal = 'http://localhost:4200';
             var html ='';
             if (configuration.isProduction) {
                 html = bodyHtml.replace('{{url}}', urlProd);
@@ -65,21 +65,25 @@ router.post('/recovery',
 )
 
 router.post('/recovery-password',
-    validatorHandler(recoveryPassword,'body'),
-    async(req,res,next)=>{
-        passport.authenticate('jwtRecovery',{session:false},async(err,user)=>{
+    validatorHandler(recoveryPassword, 'body'),
+    async (req, res, next) => {
+        passport.authenticate('jwtRecovery', { session: false }, async (err, user) => {
             try {
-                if (!user) {
-                    throw boom.unauthorized('unauthorized, check your email')
+                if (err) {
+                    return next(err);
                 }
-                const userUpdate = await authServices.updatePassword(req.body,user);
-                res.status(202).json(userUpdate)
+                if (!user) {
+                    throw boom.unauthorized('unauthorized, check your email');
+                }
+                const userUpdate = await authServices.updatePassword(req.body, user);
+                res.status(202).json(userUpdate);
             } catch (error) {
-                next(error)
+                next(error);
             }
-        })
+        })(req, res, next);
     }
-)
+);
+
 
 
 module.exports = router
