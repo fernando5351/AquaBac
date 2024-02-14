@@ -52,7 +52,7 @@ class MonthlyFeesController {
                     "month": monthName,
                     "adressId": element.id,
                     "year": year,
-                    "totalAmount": 0,
+                    "totalAmount": amount.dataValues.amount,
                     "amountPayable": amount.dataValues.amount,
                     "monthlyFeesId": monthlyFee.dataValues.id,
                     "status": "pending"
@@ -109,7 +109,8 @@ class MonthlyFeesController {
             const getPayment = payment[i];
             if (getPayment.status === paymentPendingStatus) {
                 const mora = await amountController.searchAmount('mora');
-                await paymentController.updadtePayment(getPayment.id, {status: PaymentLate, latePaymentAmount: mora.dataValues.amount});
+                let totalAmount = getPayment.dataValues.amountPayable +  mora.dataValues.amount;
+                await paymentController.updadtePayment(getPayment.id, {status: PaymentLate, latePaymentAmount: mora.dataValues.amount, totalAmount});
             }
         }
         return await this.getById(id);
