@@ -14,7 +14,7 @@ const paymentStatus = Joi.string().valid('paid', 'pending', 'mora');
 const createClient = Joi.object({
     name: name.required(),
     email: email.required(),
-    password: password,
+    password,
     dui: dui.required(),
     cellphone: cellphone,
     otherCellphone: otherCellphone,

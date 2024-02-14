@@ -25,7 +25,7 @@ const AdressModel = {
     },
     houseNumber: {
         type: DataTypes.STRING(),
-        allowNull: false,
+        allowNull: true,
     },
     polygonNumber: {
         type: DataTypes.STRING(),

@@ -37,6 +37,7 @@ const ClientModel = {
     },
     amountId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
             model: Amount_TABLE,
             key: 'id'

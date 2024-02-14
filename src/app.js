@@ -44,7 +44,6 @@ passport.use(localStrategy)
 
 
 //middlewares
-
 app.use(authorizeRoles);
 app.use(logErrors);
 app.use(ormErrorHandler);
