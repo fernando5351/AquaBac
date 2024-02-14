@@ -54,7 +54,7 @@ class ClientController {
     async searchByName(name) {
         const clients = await models.Client.findAll({
             where: {
-                name: { [Op.like]: `%${name}%` }
+                name: { [Op.iLike]: `%${name}%` }
             },
         });
         if (!clients || clients.length === 0) {
