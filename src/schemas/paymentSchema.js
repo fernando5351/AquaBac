@@ -8,6 +8,8 @@ const amount = Joi.number();
 const status = Joi.string().valid('paid', 'pending', 'mora');
 const monthlyFeesId = Joi.number().integer();
 const totalAmount = Joi.number();
+const from = Joi.date();
+const untill = Joi.date();
 
 const createPayment = Joi.object({
     clientId: clientId.required(),
@@ -36,9 +38,15 @@ const getPayment = Joi.object({
     id: id.required()
 });
 
+const report = Joi.object({
+    from: from.required(),
+    untill: untill.required()
+})
+
 module.exports = {
     createPayment,
     updatePayment,
     getPayment,
-    searchPayment
+    searchPayment,
+    report
 };

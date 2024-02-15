@@ -5,6 +5,7 @@ const {
     updatePayment,
     getPayment,
     searchPayment,
+    report
 } = require('../schemas/paymentSchema');
 const PaymentController = require('../controllers/paymentController');
 
@@ -57,7 +58,25 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.get('/:id', validatorHandler(getPayment, 'params'), async (req, res, next) => {
+router.get('/report',
+    async (req, res, next) => {
+        try {
+            const { from, untill } = req.query;
+            const report = await paymentService.report(from, untill);
+            res.status(200).json({
+                statusCode: 200,
+                message: 'Report payment successfully',
+                data: report,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+router.get('/:id',
+    validatorHandler(getPayment, 'params'),
+    async (req, res, next) => {
     try {
         const { id } = req.params;
         const payment = await paymentService.getById(id);

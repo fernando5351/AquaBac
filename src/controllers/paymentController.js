@@ -1,6 +1,7 @@
 const { models } = require('../../sequelize/sequelizeConnection');
 const boom = require('@hapi/boom');
 const AmountController = require('./amountController');
+const { Op } = require('sequelize');
 
 const amountController = new AmountController();
 const amountName = 'mora';
@@ -74,6 +75,43 @@ class PaymentController {
         }
         const updatedPayment = await getPayment.update(dto);
         return updatedPayment;
+    }
+
+    async report(from, until) {
+        const payments = await  models.Payment.findAll({
+            where: {
+                createdAt: {
+                    [Op.between]: [from, until]
+                }
+            }
+        });
+
+        const totalAmountCollected = payments.reduce((total, payment) => total + payment.amountPayable, 0);
+
+        let summary = {
+            paid: 0,
+            mora: 0,
+            pending: 0
+        };
+
+        payments.forEach(payment => {
+            switch (payment.status) {
+                case 'paid':
+                    summary.paid = summary.paid + payment.totalAmount;
+                    break;
+                case 'mora':
+                    summary.mora =+  payment.latePaymentAmount;
+                    break;
+                case 'pending':
+                    summary.pending =+ payment.amountPayable;
+                    break;
+            }
+        });
+
+        return {
+            totalAmountCollected,
+            summary
+        };
     }
 
     async updadtePayment(id, data) {
