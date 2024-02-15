@@ -77,16 +77,26 @@ class PaymentController {
         return updatedPayment;
     }
 
-    async report(from, until) {
-        const payments = await  models.Payment.findAll({
-            where: {
-                createdAt: {
-                    [Op.between]: [from, until]
-                }
+    async report(from, until,  status) {
+        let  where = {
+            createdAt: {
+                [Op.between]: [from, until]
             }
+        };
+
+        if (status) {
+            where.status = status;
+        }
+        const payments = await  models.Payment.findAll({
+            include: ['paymentMonthlyFee', 'Clients'],
+            where: where
         });
 
-        const totalAmountCollected = payments.reduce((total, payment) => total + payment.amountPayable, 0);
+        const totalAmountCollected = payments.reduce((total, payment) => {
+            if (payment.dataValues.status === 'paid') {
+                total + payment.amountPayable
+            }
+        }, 0);
 
         let summary = {
             paid: 0,
@@ -100,17 +110,18 @@ class PaymentController {
                     summary.paid = summary.paid + payment.totalAmount;
                     break;
                 case 'mora':
-                    summary.mora =+  payment.latePaymentAmount;
+                    summary.mora = summary.mora +  payment.latePaymentAmount + payment.amountPayable;
                     break;
                 case 'pending':
-                    summary.pending =+ payment.amountPayable;
+                    summary.pending = summary.pending + payment.amountPayable;
                     break;
             }
         });
 
         return {
             totalAmountCollected,
-            summary
+            summary,
+            payments
         };
     }
 

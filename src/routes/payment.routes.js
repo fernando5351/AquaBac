@@ -61,8 +61,8 @@ router.get('/', async (req, res, next) => {
 router.get('/report',
     async (req, res, next) => {
         try {
-            const { from, untill } = req.query;
-            const report = await paymentService.report(from, untill);
+            const { from, untill, status } = req.query;
+            const report = await paymentService.report(from, untill, status);
             res.status(200).json({
                 statusCode: 200,
                 message: 'Report payment successfully',
