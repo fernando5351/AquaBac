@@ -45,10 +45,6 @@ const PaymentModel = {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    amountPayable: {
-        type: DataTypes.DOUBLE,
-        allowNull: false
-    },
     latePaymentAmount: {
         type: DataTypes.DOUBLE,
         allowNull: true,
@@ -61,7 +57,7 @@ const PaymentModel = {
     status: {
         type: DataTypes.STRING,
         validate: {
-          isIn: [['paid', 'pending', 'mora']],
+          isIn: [['paid', 'pending', 'mora', 'cancel']],
         },
         defaultValue: "pending"
     },

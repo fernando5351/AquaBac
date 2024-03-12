@@ -1,7 +1,6 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const { Amount_TABLE } = require('./amountModel');
 
-const CLIENT_TABLE = 'client';
+const CLIENT_TABLE = 'clients'; // Cambié el nombre a plural para seguir una convención de nombres
 
 const ClientModel = {
     id: {
@@ -28,22 +27,12 @@ const ClientModel = {
         unique: true
     },
     cellphone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true
     },
     otherCellphone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true
-    },
-    amountId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Amount_TABLE,
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
     },
     createdAt:{
         type: DataTypes.DATE,
@@ -62,9 +51,11 @@ class Client extends Model {
             foreignKey: 'clientId',
             as:  'Payment'
         });
-        this.belongsTo(models.Amount, {
-            foreignKey: 'amountId',
-            as: 'amountPayment',
+        this.belongsToMany(models.Amount, {
+            through: 'Amounts',
+            foreignKey: 'clientId',
+            otherKey: 'amountId',
+            as: 'ClientAmounts'
         });
     }
 

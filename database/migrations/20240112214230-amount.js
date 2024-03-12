@@ -1,13 +1,13 @@
 'use strict';
 
-const { Amount_TABLE, AmountModel } = require('../models/amountModel');
+const { AMOUNT_TABLE, AmountModel } = require('../models/amountModel');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable(Amount_TABLE, AmountModel);
+    await queryInterface.createTable(AMOUNT_TABLE, AmountModel);
 
-    await queryInterface.bulkInsert(Amount_TABLE, [
+    await queryInterface.bulkInsert(AMOUNT_TABLE, [
       {
         name: "cuota mensual",
         amount: 10.50,
@@ -22,6 +22,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable(Amount_TABLE);
+    await queryInterface.dropTable(AMOUNT_TABLE);
   }
 };

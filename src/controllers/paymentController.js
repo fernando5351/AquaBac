@@ -81,6 +81,9 @@ class PaymentController {
         let  where = {
             createdAt: {
                 [Op.between]: [from, until]
+            },
+            canceledIn: {
+                [Op.between]: [from, until]
             }
         };
 

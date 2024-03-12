@@ -36,10 +36,9 @@ class MonthlyFeesController {
         const clients = await clientController.getAll();
         for (let i=0; i< clients.length; i++) {
             let clientId = clients[i].id;
-            let amountId = clients[i].amountId;
             const adress = clients[i].Adress;
+            const amounts = clients[i].ClientAmounts;
 
-            const amount =  await amountController.getById(amountId);
 
             // Asignar el pago a todos los clientes
             const monthName = new Date().toLocaleString('default', { month: 'long' });
@@ -47,13 +46,21 @@ class MonthlyFeesController {
 
             for (let i = 0; i < adress.length; i++) {
                 const element = adress[i];
+
+                let amountBilling = 0;
+                for (let i = 0; i < amounts.length; i++) {
+                    const AmountElement = amounts[i];
+
+                    amountBilling = AmountElement.amount + amountBilling;
+                }
+
                 await paymentController.create({
                     "clientId": clientId,
                     "month": monthName,
                     "adressId": element.id,
                     "year": year,
-                    "totalAmount": amount.dataValues.amount,
-                    "amountPayable": amount.dataValues.amount,
+                    "totalAmount": amountBilling,
+                    "amountPayable": amountBilling,
                     "monthlyFeesId": monthlyFee.dataValues.id,
                     "status": "pending"
                 });
@@ -71,7 +78,8 @@ class MonthlyFeesController {
                     include: [
                         {
                             model: models.Client,
-                            as: 'Clients'
+                            as: 'Clients',
+                            include: 'ClientAmounts'
                         }
                     ]
                 }

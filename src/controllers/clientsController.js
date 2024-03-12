@@ -4,7 +4,28 @@ const { Op } = require('sequelize');
 
 class ClientController {
     async create(data) {
-        const clients = await models.Client.create(data);
+        const DTOclient = {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            dui: data.dui,
+            cellphone: data.cellphone,
+            otherCellphone: data.otherCellphone
+        }
+
+        const clients = await models.Client.create(DTOclient);
+        const clientId = clients.id;
+        console.log(clientId);
+        const amountArray =  data.amountId;
+        for (let i = 0; i < amountArray.length; i++) {
+            const amount = {
+                clientId: clientId,
+                amountId: amountArray[i]
+            };
+
+            const resultAmount = await models.Amounts.create(amount);
+            console.log(resultAmount);
+        }
         return clients;
     }
 
@@ -13,6 +34,10 @@ class ClientController {
             {
                 model: models.Adress,
                 as: 'Adress',
+            },
+            {
+                model: models.Amount,
+                as: 'ClientAmounts'
             },
             {
                 model: models.Payment,
@@ -39,6 +64,10 @@ class ClientController {
             {
                 model: models.Adress,
                 as: 'Adress',
+            },
+            {
+                model: models.Amount,
+                as: 'ClientAmounts'
             },
             {
                 model: models.Payment,

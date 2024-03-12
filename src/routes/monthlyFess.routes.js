@@ -5,7 +5,7 @@ const { MonthlyFeesController } = require('../controllers/monthlyFeesController'
 
 const service = new MonthlyFeesController();
 
-router.post('/',
+router.post('/open',
     validatorHandler(createMonthlyFee, 'body'),
     async (req, res, next) => {
         try {
