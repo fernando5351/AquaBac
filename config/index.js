@@ -22,6 +22,4 @@ const config = {
     }
 }
 
-console.log("configuracion de la db", config.database);
-
 module.exports = config;
