@@ -15,10 +15,18 @@ module.exports = {
     development: {
         url: URI,
         dialect: 'postgres',
+        ssl: true,
+        dialectOptions: {
+            ssl: { require: true }
+        }
     },
     production: {
         url: URI,
         dialect: 'postgres',
+        ssl: true,
+        dialectOptions: {
+            ssl: { require: true }
+        }
     }
 };
  
