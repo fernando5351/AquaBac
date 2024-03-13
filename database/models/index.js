@@ -5,6 +5,7 @@ const { Adress, AdressModel} = require('../models/AddressModel');
 const { MonthlyFees, MonthlyFeesModel} = require('../models/MonthlyFeesModel');
 const { Payment, PaymentModel} = require('../models/PaymentModel');
 const { Amount, AmountModel } = require('./amountModel');
+const { Amounts, AmountsModel } = require('./amounts.model');
 
 function setUpModels(sequelize) {
     Role.init(RoleModel, Role.config(sequelize));
@@ -14,6 +15,7 @@ function setUpModels(sequelize) {
     MonthlyFees.init(MonthlyFeesModel, MonthlyFees.config(sequelize));
     Payment.init(PaymentModel, Payment.config(sequelize));
     Amount.init(AmountModel, Amount.config(sequelize));
+    Amounts.init(AmountsModel, Amounts.config(sequelize))
 
     // Asociaciones
     Role.associate(sequelize.models);
@@ -23,6 +25,7 @@ function setUpModels(sequelize) {
     MonthlyFees.associate(sequelize.models);
     Payment.associate(sequelize.models);
     Amount.associate(sequelize.models);
+    Amounts.associate(sequelize.models);
 }
 
 module.exports = { setUpModels };

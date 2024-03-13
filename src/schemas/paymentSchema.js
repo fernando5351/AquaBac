@@ -7,6 +7,9 @@ const year = Joi.number().integer();
 const amount = Joi.number();
 const status = Joi.string().valid('paid', 'pending', 'mora');
 const monthlyFeesId = Joi.number().integer();
+const totalAmount = Joi.number();
+const from = Joi.date();
+const untill = Joi.date();
 
 const createPayment = Joi.object({
     clientId: clientId.required(),
@@ -23,7 +26,8 @@ const updatePayment = Joi.object({
     year,
     amount,
     status,
-    monthlyFeesId
+    monthlyFeesId,
+    totalAmount: totalAmount.required()
 });
 
 const searchPayment = Joi.object({
@@ -34,9 +38,15 @@ const getPayment = Joi.object({
     id: id.required()
 });
 
+const report = Joi.object({
+    from: from.required(),
+    untill: untill.required()
+})
+
 module.exports = {
     createPayment,
     updatePayment,
     getPayment,
-    searchPayment
+    searchPayment,
+    report
 };

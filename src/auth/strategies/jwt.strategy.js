@@ -3,7 +3,7 @@ const {Jwt} = require('../../../config/index');
 
 const jwt = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrkey: Jwt.secret
+    secretOrKey: Jwt.secret
 }
 
 const jsonwebtoken = new Strategy(jwt,async(payload,done)=>{
@@ -15,14 +15,14 @@ const jsonwebtoken = new Strategy(jwt,async(payload,done)=>{
 
  const loginOptions = {
     jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
-    secretOrkey: Jwt.login
+    secretOrKey: Jwt.login
  }
 
  const loginJwt = new Strategy(loginOptions,(payload,done)=>(null,payload));
 
  const recoveryOptions = {
     jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
-    secretOrkey: Jwt.recovery
+    secretOrKey: Jwt.recovery
  }
 
  const recoveryJwt = new Strategy(recoveryOptions,(payload,done)=> done(null, payload));

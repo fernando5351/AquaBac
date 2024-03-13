@@ -13,6 +13,10 @@ const PaymentModel = {
         allowNull: false,
         autoIncrement: true
     },
+    invoiceCod: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
     clientId: {
         type: DataTypes.INTEGER,
         references: {
@@ -41,14 +45,19 @@ const PaymentModel = {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    amount: {
+    latePaymentAmount: {
         type: DataTypes.DOUBLE,
-        allowNull: false
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalAmount: {
+        type: DataTypes.DOUBLE,
+        allowNull: true
     },
     status: {
         type: DataTypes.STRING,
         validate: {
-          isIn: [['paid', 'pending', 'mora']],
+          isIn: [['paid', 'pending', 'mora', 'cancel']],
         },
         defaultValue: "pending"
     },
@@ -66,6 +75,11 @@ const PaymentModel = {
         type: DataTypes.DATE,
         allowNull:false,
         defaultValue: Sequelize.NOW
+    },
+    candledIn: {
+        type: DataTypes.DATE,
+        allowNull:true,
+        field: 'candled_in'
     }
 };
 

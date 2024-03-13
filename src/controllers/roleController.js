@@ -29,10 +29,10 @@ class RoleController {
     };
 
 
-    async searchByName(name){
+    async searchByName(name){ 
         const role = await models.Role.findAll({
             where:{
-                name:{[Op.like]: `%${name}%`}
+                name:{[Op.iLike]: `%${name}%`}
             },
         });
         if (!role) {

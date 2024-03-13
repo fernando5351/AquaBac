@@ -57,7 +57,7 @@ router.get('/:id',
     }
 );
 
-router.get('/search/name',
+router.get('/search/:name',
     validatorHandler(searchClient, 'params'),
     async (req, res, next) => {
         try {

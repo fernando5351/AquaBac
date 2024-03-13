@@ -5,7 +5,7 @@ const { MonthlyFeesController } = require('../controllers/monthlyFeesController'
 
 const service = new MonthlyFeesController();
 
-router.post('/',
+router.post('/open',
     validatorHandler(createMonthlyFee, 'body'),
     async (req, res, next) => {
         try {
@@ -20,6 +20,23 @@ router.post('/',
         }
     }
 );
+
+router.get('/close-month/:id', 
+    validatorHandler(getMonthlyFee, 'params'),
+    async (req, res, next) => {
+        try {
+            const { id } = req.params
+            const closeMonth = await service.closeMont(id);
+            res.status(200).json({
+                statusCode: 200,
+                message: 'month feess closed',
+                data: closeMonth
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+)
 
 router.get('/',
     async (req, res, next) => {

@@ -4,50 +4,89 @@ const { Op } = require('sequelize');
 
 class ClientController {
     async create(data) {
-        const clients = await models.Client.create(data);
+        const DTOclient = {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            dui: data.dui,
+            cellphone: data.cellphone,
+            otherCellphone: data.otherCellphone
+        }
+
+        const clients = await models.Client.create(DTOclient);
+        const clientId = clients.id;
+        console.log(clientId);
+        const amountArray =  data.amountId;
+        for (let i = 0; i < amountArray.length; i++) {
+            const amount = {
+                clientId: clientId,
+                amountId: amountArray[i]
+            };
+
+            const resultAmount = await models.Amounts.create(amount);
+            console.log(resultAmount);
+        }
         return clients;
     }
 
     async getAll(paymentStatus) {
-        const whereOptions = {};
+        const includeOptions = [
+            {
+                model: models.Adress,
+                as: 'Adress',
+            },
+            {
+                model: models.Amount,
+                as: 'ClientAmounts'
+            },
+            {
+                model: models.Payment,
+                as: 'Payment',
+                include: [
+                    {
+                        model: models.Adress,
+                        as: 'Adress'
+                    }
+                ]
+            }
+        ];
 
         if (paymentStatus) {
-            whereOptions.status = paymentStatus;
+            includeOptions[1].where = { status: paymentStatus };
         }
-        console.log(whereOptions);
         return await models.Client.findAll({
-            include: [
-                {
-                    model: models.Adress,
-                    as: 'Adress',
-                },
-                {
-                    model: models.Payment,
-                    as: 'Payment',
-                    where: (Object.keys(whereOptions).length !== 0) ? whereOptions : undefined
-                }
-            ]
+            include: includeOptions
         });
     }
 
     async getById(id, paymentStatus) {
-        const whereOptions = {};
+        const includeOptions = [
+            {
+                model: models.Adress,
+                as: 'Adress',
+            },
+            {
+                model: models.Amount,
+                as: 'ClientAmounts'
+            },
+            {
+                model: models.Payment,
+                as: 'Payment',
+                include: [
+                    {
+                        model: models.Adress,
+                        as: 'Adress'
+                    }
+                ]
+            }
+        ];
 
         if (paymentStatus) {
-            whereOptions.status = paymentStatus;
+            includeOptions[1].where = { status: paymentStatus };
         }
+        
         let client = await models.Client.findByPk(id, {
-            include: [
-                {
-                    model: models.Adress,
-                    as: 'Adress',
-                },
-                {
-                    model:  models.Payment,
-                    as: 'Payment',
-                    where: whereOptions
-                }
-            ]
+            include: includeOptions
         });
         if (!client) throw boom.notFound("Client not found");
         return client;
@@ -56,7 +95,7 @@ class ClientController {
     async searchByName(name) {
         const clients = await models.Client.findAll({
             where: {
-                name: { [Op.like]: `%${name}%` }
+                name: { [Op.iLike]: `%${name}%` }
             },
         });
         if (!clients || clients.length === 0) {
@@ -67,8 +106,10 @@ class ClientController {
 
     async updateClient(id, data) {
         console.log(id + ' es y data: ' + data);
+        console.log(data);
         const client = await this.getById(id);
-        return await client.update(data);
+        const clientUpdated = await client.update(data);
+        return clientUpdated;
     }
 
     async deleteClient(id) {

@@ -5,6 +5,7 @@ const {
     updatePayment,
     getPayment,
     searchPayment,
+    report
 } = require('../schemas/paymentSchema');
 const PaymentController = require('../controllers/paymentController');
 
@@ -27,6 +28,23 @@ router.post(
     }
 );
 
+router.patch('/pay/:id', 
+    validatorHandler(getPayment, 'params'),
+    validatorHandler(updatePayment, 'body'),
+    async (req, res, next) => {
+        try {
+            const payment = await paymentService.Pay(req.params.id, req.body);
+            res.status(200).json({
+                statusCode: 200,
+                message: 'payment made satisfactorily',
+                data: payment,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+)
+
 router.get('/', async (req, res, next) => {
     try {
         const payments = await paymentService.getAll();
@@ -40,7 +58,25 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.get('/:id', validatorHandler(getPayment, 'params'), async (req, res, next) => {
+router.get('/report',
+    async (req, res, next) => {
+        try {
+            const { from, untill, status } = req.query;
+            const report = await paymentService.report(from, untill, status);
+            res.status(200).json({
+                statusCode: 200,
+                message: 'Report payment successfully',
+                data: report,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+router.get('/:id',
+    validatorHandler(getPayment, 'params'),
+    async (req, res, next) => {
     try {
         const { id } = req.params;
         const payment = await paymentService.getById(id);
@@ -78,7 +114,7 @@ router.patch(
     validatorHandler(updatePayment, 'body'),
     async (req, res, next) => {
         try {
-            const payment = await paymentService.updatePayment(req.params.id, req.body);
+            const payment = await paymentService.updadtePayment(req.params.id, req.body);
             res.status(200).json({
                 statusCode: 200,
                 message: 'Update payment successfully',

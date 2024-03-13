@@ -8,10 +8,24 @@ const PaymentController = require('./paymentController');
 const clientController = new ClientController();
 const paymentController = new PaymentController();
 const amountController = new AmountController();
+
+const paymentPendingStatus = 'pending';
+const paymentCanceledStatus = 'paid';
+const PaymentLate = 'mora';
+const monthlyFeeStatusInactive = 'inactive';
+const monthlyFeeStatusActive = 'active';
+
 class MonthlyFeesController {
     async create(data) {
-        try {
-            const { from, untill } = data;
+        const { from, untill } = data;
+
+        const getMonthlyFees = await this.getAll();
+        for (let i = 0; i < getMonthlyFees.length; i++) {
+            const monthFees = getMonthlyFees[i];
+            if (monthFees.status === monthlyFeeStatusActive) {
+                throw boom.badRequest("Ya hay una factura de mes activa");
+            }
+        }
 
         const minDuration = 29 * 24 * 60 * 60 * 1000;
         if (new Date(untill) - new Date(from) < minDuration) {
@@ -22,55 +36,92 @@ class MonthlyFeesController {
         const clients = await clientController.getAll();
         for (let i=0; i< clients.length; i++) {
             let clientId = clients[i].id;
-            let amountId = clients[i].amountId;
-            const amount =  await amountController.getById(amountId);
-            //asignar mora
-            for (let i = 0; i < clients[i].Payment.length; i++) {
-                const payment = clients[i].Payment[i];
-                
-                if (payment.status === "pending") {
-                    await clientController.updateClient(clientId, {'status':'mora'});
-                };
-            }
+            const adress = clients[i].Adress;
+            const amounts = clients[i].ClientAmounts;
+
+
             // Asignar el pago a todos los clientes
             const monthName = new Date().toLocaleString('default', { month: 'long' });
             const year = new Date().getFullYear();
 
-            for (let i = 0; i < clients[i].Adress.length; i++) {
-                const adress = clients[i].Adress[i];
-                console.log(adress);
-                console.log(adress.id + ' => id de direcion del usuario => ' + clientId);
+            for (let i = 0; i < adress.length; i++) {
+                const element = adress[i];
 
-                const payment = await paymentController.create({
+                let amountBilling = 0;
+                for (let i = 0; i < amounts.length; i++) {
+                    const AmountElement = amounts[i];
+
+                    amountBilling = AmountElement.amount + amountBilling;
+                }
+
+                await paymentController.create({
                     "clientId": clientId,
                     "month": monthName,
-                    "adressId": adress.id,
+                    "adressId": element.id,
                     "year": year,
-                    "amount": amount.dataValues.amount,
+                    "totalAmount": amountBilling,
+                    "amountPayable": amountBilling,
                     "monthlyFeesId": monthlyFee.dataValues.id,
                     "status": "pending"
                 });
-                console.log(payment);
-            };
+            }
         }
-        return monthlyFee;
-        } catch (error) {
-            console.log(error);
-        }
-        
+        return monthlyFee;        
     }
 
     async getAll() {
-        const monthlyFees = await models.MonthlyFees.findAll();
-        return monthlyFees;
+        const monthlyFees = await models.MonthlyFees.findAll({
+            include: [
+                {
+                    model: models.Payment,
+                    as: 'paymentMonthlyFee',
+                    include: [
+                        {
+                            model: models.Client,
+                            as: 'Clients',
+                            include: 'ClientAmounts'
+                        }
+                    ]
+                }
+            ]
+        });
+        return monthlyFees; 
     }
 
     async getById(id) {
-        const monthlyFee = await models.MonthlyFees.findByPk(id);
+        const monthlyFee = await models.MonthlyFees.findByPk(id, {
+            include: [
+                {
+                    model: models.Payment,
+                    as: 'paymentMonthlyFee',
+                    include: [
+                        {
+                            model: models.Client,
+                            as: 'Clients'
+                        }
+                    ]
+                }
+            ]
+        });
         if(!monthlyFee) {
             throw boom.notFound('Data not found');
         }
         return monthlyFee;
+    }
+
+    async closeMont(id){
+        const monthlyFee = await this.getById(id);
+        await this.updateMonthlyFee(monthlyFee.id, { status: monthlyFeeStatusInactive });
+        const payment = await paymentController.getAll();
+        for (let i = 0; i < payment.length; i++) {
+            const getPayment = payment[i];
+            if (getPayment.status === paymentPendingStatus) {
+                const mora = await amountController.searchAmount('mora');
+                let totalAmount = getPayment.dataValues.amountPayable +  mora.dataValues.amount;
+                await paymentController.updadtePayment(getPayment.id, {status: PaymentLate, latePaymentAmount: mora.dataValues.amount, totalAmount});
+            }
+        }
+        return await this.getById(id);
     }
 
     async updateMonthlyFee(id, data) {

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { models } = require('../../sequelize/sequelizeConnection');
 const boom = require('@hapi/boom');
 
@@ -19,6 +20,16 @@ class AmountController {
         const amount = await models.Amount.findByPk(id);
         if (!amount) {
             throw boom.notFound(`Amount with ${id} not found`);
+        }
+        return amount;
+    }
+
+    async searchAmount(name){
+        const amount = await models.Amount.findOne({
+            where: { name: { [Op.iLike]: `%${name}%` } }
+        });
+        if (!amount) {
+            throw boom.notFound('No data available for this Name');
         }
         return amount;
     }

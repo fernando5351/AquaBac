@@ -1,6 +1,6 @@
 const { Model, Sequelize, DataTypes } = require('sequelize');
 
-const Amount_TABLE = 'amount';
+const AMOUNT_TABLE = 'amount';
 
 const AmountModel = {
     id: {
@@ -9,10 +9,15 @@ const AmountModel = {
         allowNull: false,
         autoIncrement: true
     },
+    name: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
     amount: {
         type: DataTypes.DOUBLE,
         allowNull: false,
-        unique: true
+        unique: false
     },
     createdAt:{
         type: DataTypes.DATE,
@@ -23,24 +28,26 @@ const AmountModel = {
 
 class Amount extends Model {
     static associate(models) {
-        this.hasMany(models.Client, {
+        this.belongsToMany(models.Client, {
+            through: 'Amounts',
             foreignKey: 'amountId',
-            as: 'Payments'
-        })
+            otherKey: 'clientId',
+            as: 'ClientsAmount'
+        });
     }
 
     static config(sequelize) {
         return {
             sequelize,
             modelName: 'Amount',
-            tableName: Amount_TABLE,
+            tableName: AMOUNT_TABLE,
             timestamps: false
         }
     }
 }
 
 module.exports = {
-    Amount_TABLE,
+    AMOUNT_TABLE,
     AmountModel,
     Amount
 };

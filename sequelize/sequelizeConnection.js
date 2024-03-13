@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 
 let URI = '';
 if (isProduction) {
-    URI = database.url; // Corregido para acceder correctamente a la URL en modo de producción
+    URI = database.url;
 } else {
     const PASSWORD = encodeURIComponent(database.password);
     const USER = encodeURIComponent(database.user);
