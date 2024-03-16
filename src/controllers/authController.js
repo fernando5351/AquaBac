@@ -2,7 +2,7 @@ const {models} = require('../../sequelize/sequelizeConnection');
 const nodemailer = require('nodemailer');
 const boom = require('@hapi/boom');
 const jwt = require('jsonwebtoken');
-const {Jwt,Mail} = require('../../config/index');
+const {Jwt,mail} = require('../../config/index');
 const bcrypt = require('bcrypt');
 
 
@@ -23,7 +23,8 @@ class authController {
             throw boom.unauthorized("No se encontro el usuario")
         }
         const password = await bcrypt.hash(data.password,10);
-        const userUpdate = await user.update({password,status:true})
+        const userUpdate = await user.update({password})
+        console.log(userUpdate);
         return userUpdate
     }
 
@@ -31,7 +32,7 @@ class authController {
         const payload ={
             sub: user.id,
             code: user.status,
-            role: user.role ? user.role : null
+            role: user.Role ? user.Role.name : null,
         };
         const token = await jwt.sign(payload, Jwt.secret, {expiresIn: '72h'});
         return token
@@ -66,13 +67,13 @@ class authController {
             secure: true,
             port: 465,
             auth:{
-                user: Mail.mail,
-                pass: Mail.password
+                user: mail.user,
+                pass: mail.password
             }
         });
 
         const mailOption = {
-            from: Mail.mail,
+            from: mail.user,
             to: user.email,
             subject,
             html: body

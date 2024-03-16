@@ -4,16 +4,17 @@ const {validatorHandler} = require('../../middlewares/validatorHandler')
 const authController = require('../controllers/authController');
 const configuration = require('../../config/index');
 const UserController = require('../controllers/userController')
-const {login,recovery,recoveryPassword} = require('../schemas/authSchema')
-const bodyHtml = fs.readFileSync(path.join(__dirname, '../mail/recovery.html'), 'utf-8');
+const {login,recovery,recoveryPassword} = require('../schemas/authSchema');
 const fs = require('fs')
+const path = require('path');
+const bodyHtml = fs.readFileSync(path.join(__dirname, '../mail/recovery.html'), 'utf-8');
 const passport = require('passport');
-const { error } = require('console');
+const { error, log } = require('console');
 
 const authServices = new authController;
 const userServices = new UserController;
 
-router.post('/login',
+router.post('/login', 
     validatorHandler(login,'body'),
     passport.authenticate('local',{session:false}),
     async(req,res,next)=>{
@@ -43,17 +44,20 @@ router.post('/recovery',
                 throw boom.unauthorized('error')
             }
             var token = await authServices.recovery(user.dataValues);
+            console.log(token);
             var urlProd = ''
-            var urlLocal = 'http://localhost:3000';
+            var urlLocal = 'http://localhost:4200';
             var html ='';
             if (configuration.isProduction) {
                 html = bodyHtml.replace('{{url}}', urlProd);
             }else{
                 html = bodyHtml.replace('{{url}}',urlLocal);
             }
-            const mail = mail.replace('{{token}}', token)
-            await authServices.sendMail(user.dataValues,'Account recovery', null);
+            const mail = html.replace('{{token}}', token)
+            await authServices.sendMail(user.dataValues,'Account recovery', mail);
+            console.log(mail);
             res.status(200).send('operation successfully')
+            
         } catch (error) {
             next(error)
         }
@@ -61,18 +65,25 @@ router.post('/recovery',
 )
 
 router.post('/recovery-password',
-    validatorHandler(recoveryPassword,'body'),
-    async(req,res,next)=>{
-        passport.authenticate('jwtRecovery',{session:false},async(err,user)=>{
+    validatorHandler(recoveryPassword, 'body'),
+    async (req, res, next) => {
+        passport.authenticate('jwtRecovery', { session: false }, async (err, user) => {
             try {
-                if (!user) {
-                    throw boom.unauthorized('unauthorized, check your email')
+                if (err) {
+                    return next(err);
                 }
-                const userUpdate = await authServices.updatePassword(req.body,user);
-                res.status(202).json(userUpdate)
+                if (!user) {
+                    throw boom.unauthorized('unauthorized, check your email');
+                }
+                const userUpdate = await authServices.updatePassword(req.body, user);
+                res.status(202).json(userUpdate);
             } catch (error) {
-                next(error)
+                next(error);
             }
-        })
+        })(req, res, next);
     }
-)
+);
+
+
+
+module.exports = router

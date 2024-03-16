@@ -20,7 +20,7 @@ class UserController  {
 
     async getAll() {
         const users = await models.User.findAll({
-            include: [{ model: models.Role, as: 'role' }],
+            include: [{ model: models.Role, as: 'Role' }],
             attributes: { exclude: ['password'] }
         });
     
@@ -41,10 +41,10 @@ class UserController  {
     }
 
     async searchByName(name){
-        const user = await models.User.findAll(name,{
+        const user = await models.User.findAll({
             where:{
                 name:{
-                    [Op.like]: `%${name}%`
+                    [Op.iLike]: `%${name}%`
                 }
             }
         });

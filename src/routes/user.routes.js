@@ -1,14 +1,18 @@
 const router = require('express').Router();
+const passport = require('passport');
 const UserController  = require('../controllers/userController');
 const {createUser,updateUser,getUser, searchUser} = require('../schemas/userSchema');
 const {validatorHandler} = require('../../middlewares/validatorHandler');
+const {authorizeRoles} = require('../../middlewares/authorizeRoles')
 const authController =  require('../controllers/authController');
-const { valid } = require('joi');
+
 
 const authService = new authController;
 const userService = new UserController;
 
-router.get('/',     
+router.get('/', 
+     passport.authenticate('jwt',{session:false}), 
+     authorizeRoles('Gerente'),   
     async(req,res,next)=>{
         try {
             const user = await userService.getAll();
@@ -98,6 +102,8 @@ router.patch('/:id',
 
 
 router.delete('/:id',
+        passport.authenticate('jwt',{session:false}), 
+        authorizeRoles('Gerente'), 
         validatorHandler(getUser,'id'),
         async (req,res,next)=> {
             try {

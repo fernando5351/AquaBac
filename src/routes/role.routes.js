@@ -2,6 +2,8 @@ const router = require('express').Router();
 const {validatorHandler} = require('../../middlewares/validatorHandler')
 const {createRole,updateRole,getRole, search} = require('../schemas/roleSchema')
 const {RoleController} = require('../controllers/roleController');
+const passport = require('passport');
+const { authorizeRoles } = require('../../middlewares/authorizeRoles');
 
 const service = new RoleController;
 
@@ -22,6 +24,8 @@ router.post('/',
 )
 
 router.get('/',
+    passport.authenticate('jwt',{session:false}), 
+    authorizeRoles('Gerente'),   
     async(req,res,next) => {
         try {
             const roles = await service.getAll();
@@ -53,8 +57,8 @@ router.get('/:id',
     }
 )
 
-router.get('/search/name',
-    validatorHandler(search),
+router.get('/search/:name',
+   
     async(req,res,next) => {
        try {
         const {name} = req.params;
@@ -71,6 +75,7 @@ router.get('/search/name',
 )
 
 router.patch('/:id',
+    
     validatorHandler(getRole, 'params'),
     validatorHandler(updateRole, 'body'),
     async (req,res,next)=>{
@@ -89,13 +94,15 @@ router.patch('/:id',
 
 
 router.delete('/:id',
+    passport.authenticate('jwt',{session:false}),
+    authorizeRoles('Gerente'),
     validatorHandler(getRole,'params'),
     async(req,res,next) => {
         try {
             const { id } = req.params;
             await service.deleteRole(id)
-            res.status(202).json({
-                statusCode: 202,
+            res.status(200).json({
+                statusCode: 200,
                 message: 'role deleted succesfully',
                 data: parseInt(id)
             })

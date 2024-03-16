@@ -1,8 +1,6 @@
-const { Model, DataTypes, Sequelize, val } = require('sequelize');
-const { PAYMENT_TABLE } = require('./PaymentModel');
-const { ADRESS_TABLE } = require('./AddressModel');
+const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const CLIENT_TABLE = 'client';
+const CLIENT_TABLE = 'clients'; // Cambié el nombre a plural para seguir una convención de nombres
 
 const ClientModel = {
     id: {
@@ -17,6 +15,7 @@ const ClientModel = {
     email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: true
     },
     password: {
         type: DataTypes.STRING,
@@ -28,40 +27,44 @@ const ClientModel = {
         unique: true
     },
     cellphone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true
     },
     otherCellphone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true
-    },
-    direction: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-            model: ADRESS_TABLE,
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
     },
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,
-        defaultvalue: Sequelize.NOW
+        defaultValue: Sequelize.NOW
     }
 }
 
 class Client extends Model {
-    static associate(models) {}
+    static associate(models) {
+        this.hasMany(models.Adress, {
+            as: 'Adress',
+            foreignKey: 'idClient'
+        });
+        this.hasMany(models.Payment, {
+            foreignKey: 'clientId',
+            as:  'Payment'
+        });
+        this.belongsToMany(models.Amount, {
+            through: 'Amounts',
+            foreignKey: 'clientId',
+            otherKey: 'amountId',
+            as: 'ClientAmounts'
+        });
+    }
 
     static config(sequelize) {
         return {
             sequelize,
-            modelName: 'ClientsModel',
+            modelName: 'Client',
             tableName: CLIENT_TABLE,
-            timestamps: true
+            timestamps: false
         }
     }
 }

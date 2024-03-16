@@ -1,6 +1,8 @@
 const { Model, Sequelize, DataTypes } = require('sequelize');
 const { CLIENT_TABLE } = require('./ClientsModel');
 const { MONTHLYFEES_TABLE } = require('./MonthlyFeesModel');
+const { Amount_TABLE } = require('./amountModel');
+const { ADRESS_TABLE } = require('./AddressModel');
 
 const PAYMENT_TABLE = 'payment';
 
@@ -11,10 +13,24 @@ const PaymentModel = {
         allowNull: false,
         autoIncrement: true
     },
-    userId: {
+    invoiceCod: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    clientId: {
         type: DataTypes.INTEGER,
         references: {
             model: CLIENT_TABLE,
+            key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    },
+    adressId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: ADRESS_TABLE,
             key: 'id'
         },
         allowNull: false,
@@ -29,15 +45,23 @@ const PaymentModel = {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    amount: {
-        type: DataTypes.FLOAT,
-        allowNull: false
+    latePaymentAmount: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalAmount: {
+        type: DataTypes.DOUBLE,
+        allowNull: true
     },
     status: {
-        type: DataTypes.ENUM('paid', 'pending'),
-        defaultValue: 'pending'
+        type: DataTypes.STRING,
+        validate: {
+          isIn: [['paid', 'pending', 'mora', 'cancel']],
+        },
+        defaultValue: "pending"
     },
-    monthlyFees: {
+    monthlyFeesId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -50,12 +74,39 @@ const PaymentModel = {
     createdAt:{
         type: DataTypes.DATE,
         allowNull:false,
-        defaultvalue: Sequelize.NOW
+        defaultValue: Sequelize.NOW
+    },
+    candledIn: {
+        type: DataTypes.DATE,
+        allowNull:true,
+        field: 'candled_in'
     }
 };
 
 class Payment extends Model {
-    static associate(models) {}
+    static associate(models) {
+        this.belongsTo(models.MonthlyFees ,{
+            foreignKey: 'monthlyFeesId',
+            as: 'paymentMonthlyFee'
+        });
+        this.belongsTo(models.Client, {
+            foreignKey: 'clientId',
+            as:  'Clients'
+        });
+        this.belongsTo(models.Adress, {
+            foreignKey: 'adressId',
+            as: 'Adress'
+        });
+    }
+
+    static config(sequelize) {
+        return {
+            sequelize,
+            tableName: PAYMENT_TABLE,
+            modelName: 'Payment',
+            timestamps: false,
+        }
+    }
 }
 
 module.exports = {
