@@ -117,7 +117,7 @@ class MonthlyFeesController {
             const getPayment = payment[i];
             if (getPayment.status === paymentPendingStatus) {
                 const mora = await amountController.searchAmount('mora');
-                let totalAmount = getPayment.dataValues.amountPayable +  mora.dataValues.amount;
+                let totalAmount = getPayment.dataValues.totalAmount +  mora.dataValues.amount;
                 await paymentController.updadtePayment(getPayment.id, {status: PaymentLate, latePaymentAmount: mora.dataValues.amount, totalAmount});
             }
         }
