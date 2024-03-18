@@ -45,7 +45,7 @@ router.post('/recovery',
             }
             var token = await authServices.recovery(user.dataValues);
             console.log(token);
-            var urlProd = ''
+            var urlProd = configuration.recoveryView
             var urlLocal = 'http://localhost:4200';
             var html ='';
             if (configuration.isProduction) {
